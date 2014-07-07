@@ -1,3 +1,5 @@
+import os
+import os.path
 from .consumer import *
 
 from twitter.stream import *
