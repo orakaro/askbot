@@ -92,9 +92,26 @@ def stream(args):
         elif tweet.get('text'):
             printNicely(tweet.get('text'))
 
+def process(m):
+    t = Twitter(auth=authen())
+    sender = m['sender_screen_name']
+    recipient = m['recipient_screen_name']
+    text = m['text']
+    ary = text.split()
+    if not ary[0].startswith('@'):
+        printNicely('Ignore message')
+    else:
+        t.statuses.update(status=text)
+
 def main():
     args = parse_arguments()
-    stream = stream(args)
+    t = Twitter(auth=authen())
+    rel = t.direct_messages(count=20,cur_page=1,include_entities=False,skip_status=True)
+    for m in reversed(rel):
+        try:
+            process(m)
+        except:
+            pass
 
 
 if __name__ == 'main':
